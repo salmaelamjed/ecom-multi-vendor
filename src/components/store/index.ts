@@ -10,7 +10,8 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import auth from "./auth/authSlice"; // Import the auth slice
+import auth from "./auth/authSlice";
+import forgotPassword from "./auth/forgotPasswordSlice "; // Ajoutez le slice forgotPassword
 import categories from "./categories/categoriesSlice";
 import products from "./products/productsSlice";
 import cart from "./cart/cartSlice";
@@ -25,7 +26,7 @@ const cartPersistConfig = {
 const authPersistConfig = {
   key: "auth",
   storage,
-  whitelist: ["user", "accessToken"], // Persist user and token
+  whitelist: ["user", "accessToken"],
 };
 
 const rootReducer = combineReducers({
@@ -33,7 +34,8 @@ const rootReducer = combineReducers({
   products,
   users,
   cart: persistReducer(cartPersistConfig, cart),
-  auth: persistReducer(authPersistConfig, auth), // Add auth to the root reducer
+  auth: persistReducer(authPersistConfig, auth),
+  forgotPassword,
 });
 
 const store = configureStore({

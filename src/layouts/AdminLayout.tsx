@@ -1,24 +1,16 @@
-// import { Outlet} from "react-router-dom";
-// import Sidebar from "@/pages/Admin/Sidebar";
-// import NavDashboard from "@/pages/NavDashboard";
+import { Outlet} from "react-router-dom";
 
-// const AdminLayout = () => {
+const AdminLayout = () => {
 
-//   return (
-//     <div className="flex h-screen">
-    
-//        <Sidebar/>      
-//       <div className="flex flex-col flex-1">
-       
-//         <NavDashboard />
+  return (
+    <div className="flex h-screen">
+      <div className="flex flex-col flex-1">
+        <main className="flex-1 p-6 bg-gray-100">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+};
 
-        
-//         <main className="flex-1 p-6 bg-gray-100">
-//           <Outlet />
-//         </main>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AdminLayout;
+export default AdminLayout;

@@ -30,7 +30,7 @@ const Header = ({ role }: HeaderRole) => {
   }, 0);
 
   const GuestNavigation = () => (
-    <div className="flex items-center gap-4">
+    <div className="flex items-end gap-4">
      
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -64,12 +64,12 @@ const Header = ({ role }: HeaderRole) => {
           </Button>
       </Link> */}
       <Link to="/login">
-        <Button variant="outline" className="p-4 rounded-lg w-24 h-10 border-blue-500">
+        <Button variant="outline" className="w-24 h-10 p-4 border-blue-500 rounded-lg">
           Login
         </Button>
       </Link>
       <Link to="/register">
-        <Button variant="outline" className="p-4 rounded-lg bg-blue-500 w-24 h-10 ">
+        <Button variant="outline" className="w-24 h-10 p-4 bg-blue-500 rounded-lg ">
           Register
         </Button>
       </Link>
@@ -104,13 +104,11 @@ const Header = ({ role }: HeaderRole) => {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="rounded-full">
             <img
               alt="Profile"
               src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full cursor-pointer"
             />
-          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-52">
           <DropdownMenuItem>
