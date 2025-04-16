@@ -1,19 +1,19 @@
 import { Link } from "react-router-dom";
 import { TProduct } from "../../../types/product";
 import { useEffect, useState } from "react";
-import { Loader } from "lucide-react"; // Importer l'icône Loader
+import { Loader } from "lucide-react"; 
 import { addToCart } from "@/components/store/cart/cartSlice";
 import { useAppDispatch } from "@/components/store/hooks";
 
 
 const Product = ({ name, price, image, id,brand }: TProduct) => {
   const dispatch = useAppDispatch();
-  const [isBtnClicked, setBtnClicked] = useState(false); // True si le bouton a été cliqué
+  const [isBtnClicked, setBtnClicked] = useState(false); // True if the button is clicked
   const [isBtnDisabled, setIsBtnDisabled] = useState(false);
 
   const addToCartHandler = () => {
     dispatch(addToCart(id));
-    setBtnClicked(true); // Indique que le bouton a été cliqué
+    setBtnClicked(true); 
   };
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const Product = ({ name, price, image, id,brand }: TProduct) => {
     setIsBtnDisabled(true);
     const debounce = setTimeout(() => {
       setIsBtnDisabled(false);
-      setBtnClicked(false); // Réinitialise après le délai pour permettre de recliquer
+      setBtnClicked(false); 
     }, 500);
     return () => clearTimeout(debounce);
   }, [isBtnClicked]);
@@ -71,7 +71,6 @@ const Product = ({ name, price, image, id,brand }: TProduct) => {
             <span className="text-xl font-semibold text-blue-600">
               ${price.toFixed(2)}
             </span>
-            <span className="text-sm text-gray-400 line-through">$1500.00</span>
           </div>
           <button
             className={`w-10 h-10 rounded-full transition-all duration-300 ease-in-out ${
@@ -82,7 +81,7 @@ const Product = ({ name, price, image, id,brand }: TProduct) => {
           >
             {isBtnClicked ? (
               <div className="flex items-center justify-center">
-                <Loader className="mr-2 animate-spin" size={20} />
+                <Loader className="animate-spin" size={20} />
               </div>
             ) : (
               <svg

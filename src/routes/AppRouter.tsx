@@ -1,132 +1,299 @@
-import { redirect } from 'react-router-dom';
-import { LoginForm } from "@/components/forms/login-form";
-import { RegisterForm } from "@/components/forms/register-form";
-import { RegisterVendorForm } from "@/components/forms/RegisterAsASaller-form";
-import DefaultLayout from "@/layouts/DefaultLayout";
-import Categories from "@/pages/commun/Categories";
-import Error from "@/pages/commun/Error";
-import Home from "@/pages/commun/Home";
-import Products from "@/pages/commun/Products";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AdminLayout from '@/layouts/AdminLayout';
-// import ProtectedRoute from '@/components/Auth/ProtectedRoute';
-import AdminDashboard from '@/pages/admin/Dashboard';
-import Unauthorized from '@/pages/commun/Unauthorized';
-import ShoppingCart from '@/pages/commun/Cart';
-import CustomerLayout from '@/layouts/CustomerLayout';
-import VendorLayout from '@/layouts/VendorLayout';
-import { ResetPwdSendOtpForm } from '@/components/forms/ResetPwdSendOtpForm-form';
-import ResetPwdVerifyOtpForm from '@/components/forms/ResetPwdVerifyOtpForm-form';
-import ResetPasswordReset from '@/components/forms/ResetPasswordReset-form';
-// import ProtectedRoute from '@/components/Auth/ProtectedRoute';
+// src/router/AppRouter.tsx
+import Lottie from "lottie-react";
+import { lazy, Suspense } from "react";
+import {
+  createBrowserRouter,
+  Outlet,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
+import ProtectedRoute from "@/components/Auth/ProtectedRoute";
+import PublicRoute from "@/components/Auth/PublicRoute"; // Import PublicRoute
+import loading from "@/assets/lottieFiles/loading.json";
 
-// Fonction pour la route "categories/products/:prefix" afin d'éviter la duplication
+// Layouts (Lazy-loaded)
+const DefaultLayout = lazy(() => import("@/layouts/DefaultLayout"));
+const VendorLayout = lazy(() => import("@/layouts/VendorLayout"));
+const CustomerLayout = lazy(() => import("@/layouts/CustomerLayout"));
+const DashboardLayout = lazy(() => import("@/layouts/dashboard-layout"));
+
+// Pages (Lazy-loaded)
+const Home = lazy(() => import("@/pages/commun/Home"));
+const Categories = lazy(() => import("@/pages/commun/Categories"));
+const Products = lazy(() => import("@/pages/commun/Products"));
+const ShoppingCart = lazy(() => import("@/pages/commun/Cart"));
+const Unauthorized = lazy(() => import("@/pages/commun/Unauthorized"));
+const LoginForm = lazy(() => import("@/components/forms/login-form"));
+const RegisterForm = lazy(() => import("@/components/forms/register-form"));
+const RegisterVendorForm = lazy(
+  () => import("@/components/forms/RegisterAsASaller-form")
+);
+const ResetPwdSendOtpForm = lazy(
+  () => import("@/components/forms/ResetPwdSendOtpForm-form")
+);
+const ResetPwdVerifyOtpForm = lazy(
+  () => import("@/components/forms/ResetPwdVerifyOtpForm-form")
+);
+const ResetPasswordReset = lazy(
+  () => import("@/components/forms/ResetPasswordReset-form")
+);
+const Payment = lazy(() => import("@/components/forms/Payment"));
+const DashboardPage = lazy(() => import("@/pages/dashboard/index"));
+const NotFound = lazy(() => import("@/pages/commun/not-found"));
+const UsersManagement = lazy(
+  () => import("@/pages/admin/Dashboard/users-management")
+);
+const OrdersManagement = lazy(
+  () => import("@/pages/admin/Dashboard/orders-management")
+);
+const ProductsManagement = lazy(
+  () => import("@/pages/admin/Dashboard/products-management")
+);
+const AuctionManagement = lazy(
+  () => import("@/pages/admin/Dashboard/auction-management")
+);
+const AuctionsPage = lazy(() => import("@/pages/commun/Auctions"));
+const ForgotPasswordForm = lazy(
+  () => import("@/components/forms/ResetPasswordReset-form")
+);
+
+// Fallback loading component
+const LoadingFallback = () => (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+    }}
+  >
+    <div className="flex flex-col items-center justify-center h-screen">
+      <Lottie animationData={loading} className="w-64 h-64" />
+      <h3 className="mt-4 text-lg font-semibold">Please wait ...</h3>
+    </div>
+  </div>
+);
+
+// Loader to validate category prefix
 const validateCategoryLoader = ({ params }) => {
   const prefix = params.prefix;
-
   if (!prefix || !/^[a-z]+$/i.test(prefix)) {
     throw redirect("/error", {
       status: 400,
       statusText: "Category not Found",
     });
   }
-
   return null;
 };
 
 const router = createBrowserRouter([
-  // Routes publiques (DefaultLayout)
+  // Public Routes (DefaultLayout)
   {
     path: "/",
-    element: <DefaultLayout />,
-    errorElement: <Error />,
+    element: (
+        <Suspense fallback={<LoadingFallback />}>
+        <DefaultLayout />
+      </Suspense>
+    ),
+    errorElement: (
+      <Suspense fallback={<LoadingFallback />}>
+        <NotFound />
+      </Suspense>
+    ),
     children: [
-      { index: true, element: <Home /> },
-      { path: "login", element: <LoginForm /> },
-      { path: "register", element: <RegisterForm /> },
-     { path: "register-as-vendor", element: <RegisterVendorForm /> },
-     { path: "reset-password/send-otp", element: <ResetPwdSendOtpForm /> },
-     {path:"reset-password/verify-otp",element:<ResetPwdVerifyOtpForm/>},
-     {path:"reset-password/reset",element:<ResetPasswordReset/>},
-
-      { path: "categories", element: <Categories /> },
-      { path: "cart", element: <ShoppingCart /> },
-      { path: "categories/products/:prefix", element: <Products />, loader: validateCategoryLoader },
-    //  { path: "categories/products/:prefix/productDetails/:id", element: <ProductDetails /> },
-    ],
-  },
-
-  // Routes admin (AdminLayout)
-   {
-     path: "/admin",
-     element: (
-        <AdminLayout />
-     ),
-    errorElement: <Error />,
-    children: [
-      // { path: "settings", element: <Settings /> },
       {
-        path: "dashboard",
-        element: <AdminDashboard />, // Layout du dashboard
-        children: [
-          { index: true, element: <h1>all element </h1> },
-          // { path: "list-vendors", element: <UserList /> },
-          { path: "list-customers", element: <h2>Liste des clients</h2> },
-          { path: "products-management", element: <h2>Gestion des produits</h2> },
-          { path: "auctions-management", element: <h2>Gestion des produits</h2> },
-        ],
+        index: true,
+        element: (
+          <PublicRoute >
+            <Suspense fallback={<LoadingFallback />}>
+              <Home />
+            </Suspense>
+          </PublicRoute>
+        ),
       },
-      { path: "categories/products/:prefix", element: <Products />, loader: validateCategoryLoader },
+      {
+        path: "login",
+        element: (
+            <PublicRoute>
+            <Suspense fallback={<LoadingFallback />}>
+              <LoginForm />
+            </Suspense>
+            </PublicRoute>
+        ),
+      },
+      {
+        path: "register",
+        element: (
+          <PublicRoute>
+            <Suspense fallback={<LoadingFallback />}>
+              <RegisterForm />
+            </Suspense>
+          </PublicRoute>
+        ),
+      },
+      {
+        path: "register-as-vendor",
+        element: (
+          <PublicRoute>
+            <Suspense fallback={<LoadingFallback />}>
+              <RegisterVendorForm />
+            </Suspense>
+          </PublicRoute>
+        ),
+      },
+      {
+        path: "forgot-password",
+        element: (
+          <PublicRoute>
+            <Suspense fallback={<LoadingFallback />}>
+              <ForgotPasswordForm />
+            </Suspense>
+          </PublicRoute>
+        ),
+      },
+      {
+        path: "reset-password/send-otp",
+        element: (
+          <PublicRoute>
+            <Suspense fallback={<LoadingFallback />}>
+              <ResetPwdSendOtpForm />
+            </Suspense>
+          </PublicRoute>
+        ),
+      },
+      {
+        path: "reset-password/verify-otp",
+        element: (
+          <PublicRoute>
+            <Suspense fallback={<LoadingFallback />}>
+              <ResetPwdVerifyOtpForm />
+            </Suspense>
+          </PublicRoute>
+        ),
+      },
+      {
+        path: "reset-password/reset",
+        element: (
+          <PublicRoute>
+            <Suspense fallback={<LoadingFallback />}>
+              <ResetPasswordReset />
+            </Suspense>
+          </PublicRoute>
+        ),
+      },
+      { path: "categories", element: <Suspense fallback={<LoadingFallback />}><Categories /></Suspense> },
+      { path: "cart", element: <Suspense fallback={<LoadingFallback />}><ShoppingCart /></Suspense> },
+      {
+        path: "categories/products/:prefix",
+        element: <Suspense fallback={<LoadingFallback />}><Products /></Suspense>,
+        loader: validateCategoryLoader,
+      },
+      { path: "payment", element: <Suspense fallback={<LoadingFallback />}><Payment /></Suspense> },
+      { path: "auctions", element: <Suspense fallback={<LoadingFallback />}><AuctionsPage /></Suspense> },
     ],
   },
 
-  // Routes vendeur (VendorLayout)
+  // Admin Routes (DashboardLayout)
+  {
+    path: "/admin",
+    element: (
+      <ProtectedRoute allowedRoles={["admin"]}>
+        <Suspense fallback={<LoadingFallback />}>
+          <DashboardLayout>
+            <Outlet />
+          </DashboardLayout>
+        </Suspense>
+      </ProtectedRoute>
+    ),
+    errorElement: (
+      <Suspense fallback={<LoadingFallback />}>
+        <NotFound />
+      </Suspense>
+    ),
+    children: [
+      { path: "dashboard", element: <Suspense fallback={<LoadingFallback />}><DashboardPage /></Suspense>, index: true },
+      { path: "dashboard/customers-management", element: <Suspense fallback={<LoadingFallback />}><UsersManagement /></Suspense> },
+      { path: "dashboard/vendors-managemnt", element: <Suspense fallback={<LoadingFallback />}><UsersManagement /></Suspense> },
+      { path: "dashboard/products-management", element: <Suspense fallback={<LoadingFallback />}><ProductsManagement /></Suspense> },
+      { path: "dashboard/auctions-management", element: <Suspense fallback={<LoadingFallback />}><AuctionManagement /></Suspense> },
+      { path: "dashboard/orders-management", element: <Suspense fallback={<LoadingFallback />}><OrdersManagement /></Suspense> },
+      {
+        path: "categories/products/:prefix",
+        element: <Suspense fallback={<LoadingFallback />}><Products /></Suspense>,
+        loader: validateCategoryLoader,
+      },
+    ],
+  },
+  
+  // Vendor Routes (VendorLayout)
   {
     path: "/vendor",
     element: (
-        <VendorLayout />
+      <ProtectedRoute allowedRoles={['vendor']}>
+        <Suspense fallback={<LoadingFallback />}>
+          <VendorLayout />
+        </Suspense>
+      </ProtectedRoute>
     ),
-    errorElement: <Error />,
+    errorElement: (
+      <Suspense fallback={<LoadingFallback />}>
+        <NotFound />
+      </Suspense>
+    ),
     children: [
-      { index: true, element: <h1>hello, Welcome with us as a saller</h1> },
-      // { path: "vendor-notifications", element: <VenderNotification /> },
-      // { path: "add-product", element: <AddProduct /> },
-      // { path: "orders", element: <Orders /> },
-      // { path: "settings", element: <Settings /> },
-      // {
-      //   path: "dashboard",
-      //   element: <VendorDashboard />,
-      //   children: [
-      //     { path: "orders-management", element: <Orders /> },
-      //     { path: "products-management", element: <ProductsManagement /> },
-      //     { path: "customers-management", element: <h1>gestion des acheteurs</h1> },
-      //     { path: "auction-management", element: <Auctions /> },
-      //   ],
-      // },
-      { path: "categories/products/:prefix", element: <Products />, loader: validateCategoryLoader },
-      // { path: "categories/products/:prefix/productDetails/:id", element: <ProductDetails /> },
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<LoadingFallback />}>
+            <h1 className="text-2xl font-bold text-primaryBlack">Hello, Welcome with us as a seller</h1>
+          </Suspense>
+        ),
+      },
+      {
+        path: "categories/products/:prefix",
+        element: <Suspense fallback={<LoadingFallback />}><Products /></Suspense>,
+        loader: validateCategoryLoader,
+      },
     ],
   },
 
-  // Routes client authentifié (CustomerLayout)
+  // Customer Routes (CustomerLayout)
   {
     path: "/customer",
     element: (
-        <CustomerLayout />
+      <ProtectedRoute allowedRoles={['customer']}>
+         <Suspense fallback={<LoadingFallback />}>
+          <CustomerLayout />
+        </Suspense>
+      </ProtectedRoute>
     ),
-    errorElement: <Error />,
+    errorElement: (
+      <Suspense fallback={<LoadingFallback />}>
+        <NotFound />
+      </Suspense>
+    ),
     children: [
-      { index: true, element: <Home /> },
-      // { path: "orders", element: <CustomerOrders /> },
-      // { path: "profile", element: <CustomerProfile /> },
-      { path: "categories/products/:prefix", element: <Products />, loader: validateCategoryLoader },
-      // { path: "categories/products/:prefix/productDetails/:id", element: <ProductDetails /> },
-      { path: "cart", element: <ShoppingCart /> },
+      { index: true, element: <Suspense fallback={<LoadingFallback />}><Home /></Suspense> },
+      {
+        path: "categories/products/:prefix",
+        element: <Suspense fallback={<LoadingFallback />}><Products /></Suspense>,
+        loader: validateCategoryLoader,
+      },
+      { path: "cart", element: <Suspense fallback={<LoadingFallback />}><ShoppingCart /></Suspense> },
+      { path: "payment", element: <Suspense fallback={<LoadingFallback />}><Payment /></Suspense> },
+      { path: "auctions", element: <Suspense fallback={<LoadingFallback />}><AuctionsPage /></Suspense> },
     ],
   },
 
-  // Page "Non autorisé"
-  { path: "/unauthorized", element: <Unauthorized /> },
+  // Unauthorized Page
+  {
+    path: "/unauthorized",
+    element: (
+      <Suspense fallback={<LoadingFallback />}>
+        <Unauthorized />
+      </Suspense>
+    ),
+  },
 ]);
 
 const AppRouter = () => {

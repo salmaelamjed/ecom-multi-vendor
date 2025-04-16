@@ -26,13 +26,13 @@ const Categories = () => {
   }, [dispatch]);
 
   return (
-    <div className="dark:bg-gray-900 bg-white shadow-sm">
+    <div className="bg-white shadow-sm dark:bg-gray-900">
       {/* Conteneur principal du menu */}
-      <div className="container mx-auto flex flex-wrap items-center justify-center gap-4 md:gap-8">
+      <div className="container flex flex-wrap items-center justify-center gap-4 mx-auto md:gap-8">
         {/* Menu Déroulant (Dropdown) */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="border-none cursor-pointer py-2 shadow-none">
+            <Button variant="outline" className="py-2 border-none shadow-none cursor-pointer">
               All Categories
             </Button>
           </DropdownMenuTrigger>

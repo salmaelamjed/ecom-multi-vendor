@@ -81,7 +81,7 @@ const ResetPwdVerifyOtpForm = () => {
           <Button
             onClick={handleVerifyOtp}
             disabled={loading === "pending"}
-            className="bg-blue-500 hover:bg-blue-600"
+            className="bg-blue-500 border hover:bg-white hover:text-black hover:border-blue-500"
           >
             {loading === "pending" ? "Vérification..." : "Vérifier OTP"}
           </Button>

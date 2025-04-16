@@ -11,11 +11,12 @@ import { CartSubtotalPrice } from "@/components/ecomerce";
 const ShoppingCart = () => {
   const dispatch = useAppDispatch();
   const { items, productsFullInfo, loading, error } = useAppSelector((state) => state.cart);
-
+   //const userAccessToken=useAppSelector((state)=>state.auth.accessToken);
+  
   useEffect(() => {
     const controller = new AbortController();
     dispatch(actGetProductsByItems({ signal: controller.signal }));
-    return () => controller.abort(); // Nettoyer le signal
+    return () => controller.abort();
   }, [dispatch]);
 
   const products = productsFullInfo.map((el) => ({
@@ -36,7 +37,8 @@ const ShoppingCart = () => {
                 </div>
               </div>
               <div className="md:w-1/4">
-                <CartSubtotalPrice />
+                <CartSubtotalPrice
+                />
               </div>
             </div>
           ) : (

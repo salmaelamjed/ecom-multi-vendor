@@ -15,10 +15,10 @@ import actForgotPasswordSendOtp from '../store/auth/act/actForgotPasswordSendOtp
 import { useState } from 'react';
 import { toast } from 'sonner'; // Ensure this import is correct
 import {  updateEmail } from '../store/auth/forgotPasswordSlice ';
-export function ResetPwdSendOtpForm({
+const ResetPwdSendOtpForm=({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+}: React.ComponentPropsWithoutRef<'div'>) =>{
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loading} = useAppSelector((state) => state.forgotPassword);
@@ -81,7 +81,7 @@ export function ResetPwdSendOtpForm({
 
                   <Button
                     type="submit"
-                    className="w-full bg-blue-500"
+                    className="w-full bg-blue-500 border hover:bg-white hover:text-black hover:border-blue-500"
                     disabled={loading === 'pending'}
                   >
                     {loading === 'pending' ? 'Sending...' : 'Send OTP'}
@@ -95,3 +95,4 @@ export function ResetPwdSendOtpForm({
     </div>
   );
 }
+export default ResetPwdSendOtpForm

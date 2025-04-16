@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import actAuthRegister from "./act/actAuthRegister";
 import actAuthLogin from "./act/actAuthLogin";
+import actAuthLogout from "./act/actAuthLogout";
 import { TLoading } from "@/types/shared";
 import { isString } from "@/types/guard";
 
@@ -45,9 +46,7 @@ const authSlice = createSlice({
     });
     builder.addCase(actAuthRegister.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      state.accessToken = action.payload.accessToken;
       state.user = action.payload.user;
-      localStorage.setItem("accessToken", action.payload.accessToken);
     });
     builder.addCase(actAuthRegister.rejected, (state, action) => {
       state.loading = "failed";
@@ -73,9 +72,26 @@ const authSlice = createSlice({
         state.error = action.payload;
       }
     });
+
+    // Logout
+    builder.addCase(actAuthLogout.pending, (state) => {
+      state.loading = "pending";
+      state.error = null;
+    });
+    builder.addCase(actAuthLogout.fulfilled, (state) => {
+      state.loading = "succeeded";
+      state.user = null;
+      state.accessToken = null;
+    });
+    builder.addCase(actAuthLogout.rejected, (state, action) => {
+      state.loading = "failed";
+      if (isString(action.payload)) {
+        state.error = action.payload;
+      }
+    });
   },
 });
 
 export const { resetUI, logoutUser } = authSlice.actions;
-export { actAuthRegister };
+export { actAuthRegister, actAuthLogin, actAuthLogout };
 export default authSlice.reducer;

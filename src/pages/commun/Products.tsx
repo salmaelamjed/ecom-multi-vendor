@@ -27,8 +27,7 @@ const Products = () => {
   return (
     <Loading status={loading} error={error}>
       <div className="px-4 py-16 mx-auto sm:px-6 lg:px-8">
-        {/* Titre ou description si nécessaire */}
-        <h1 className="mb-8 text-2xl font-bold text-gray-900">Nos Produits</h1>
+        <h1 className="mb-8 text-2xl font-bold text-gray-900">Our Products</h1>
 
         {/* Grille de produits */}
         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:gap-x-8">

@@ -91,7 +91,7 @@ const ResetPasswordReset = () => {
                   <div className="flex flex-col gap-3">
                     <Button
                       type="submit"
-                      className="w-full bg-blue-600"
+                      className="w-full bg-blue-600 border hover:bg-white hover:text-black hover:border-blue-500"
                       disabled={loading === "pending"}
                     >
                       {loading === "pending" ? "Resetting..." : "Reset Password"}

@@ -1,8 +1,9 @@
 import { useAppSelector } from "@/components/store/hooks";
+import { Link } from "react-router-dom";
 
 const CartSubtotalPrice = () => {
   const { productsFullInfo, items } = useAppSelector((state) => state.cart);
-
+  const accessToken=useAppSelector((state)=>state.auth.accessToken)
   // Calcul du sous-total
   const subtotal = productsFullInfo.reduce((sum, product) => {
     const quantity = items[product.id] || 0;
@@ -33,9 +34,21 @@ const CartSubtotalPrice = () => {
         <span className="font-semibold">Total</span>
         <span className="font-semibold">{total.toFixed(2)} MAD</span>
       </div>
-      <button className="w-full px-4 py-2 mt-4 text-white bg-blue-500 rounded-lg">
+      {
+        accessToken ?(
+       <Link to={'/payment'}>
+       <button className="w-full px-4 py-2 mt-4 text-white bg-blue-500 rounded-lg">
         Commander
-      </button>
+       </button>
+       </Link>
+        ):(
+       <Link to={'/login'}>
+       <button className="w-full px-4 py-2 mt-4 text-white bg-blue-500 rounded-lg">
+        Commander
+       </button>
+       </Link>
+        )
+      }
     </div>
   );
 };
