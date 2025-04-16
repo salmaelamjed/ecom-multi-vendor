@@ -12,7 +12,7 @@ const actGetUsers = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
     try {
       const response = await axios.get<TResponse>(
-        `http://localhost:5005/users?role=customer`,
+        `http://localhost:5005/users`,
         { signal }
       );
       return response.data;

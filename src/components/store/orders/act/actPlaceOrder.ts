@@ -1,13 +1,13 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { RootState } from "../..";
-import { isaxiosErrorHandler } from "@/Util";
+import { isaxiosErrorHandler } from "src/Util";
+import { RootState } from "@/components/store/index";
 
 const actPlaceOrder = createAsyncThunk(
   "orders/actPlaceOrder",
   async (subtotal: number, thunkAPI) => {
     const { rejectWithValue, getState } = thunkAPI;
-    const { cart } = getState() as RootState;
+    const { cart, auth } = getState() as RootState;
 
     const orderItems = cart.productsFullInfo.map((el) => ({
       id: el.id,
@@ -19,6 +19,7 @@ const actPlaceOrder = createAsyncThunk(
 
     try {
       const response = await axios.post("/orders", {
+        userId: auth.user?.id,
         items: orderItems,
         subtotal,
       });

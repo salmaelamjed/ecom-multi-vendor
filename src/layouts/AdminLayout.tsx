@@ -1,24 +1,28 @@
-// import { Outlet} from "react-router-dom";
-// import Sidebar from "@/pages/Admin/Sidebar";
-// import NavDashboard from "@/pages/NavDashboard";
+import Sidebar from '@/pages/admin/Dashboard/Sidebar';
+import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
-// const AdminLayout = () => {
+const AdminLayout: React.FC = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-//   return (
-//     <div className="flex h-screen">
-    
-//        <Sidebar/>      
-//       <div className="flex flex-col flex-1">
-       
-//         <NavDashboard />
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
-        
-//         <main className="flex-1 p-6 bg-gray-100">
-//           <Outlet />
-//         </main>
-//       </div>
-//     </div>
-//   );
-// };
+  return (
+    <div className="flex h-screen">
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <div
+        className={`flex flex-col flex-1 transition-all duration-300 ${
+          isSidebarOpen ? 'ml-64' : 'ml-0'
+        }`}
+      >
+        <main className="flex-1 p-6 bg-gray-100">
+          <Outlet context={{ isSidebarOpen }} />
+        </main>
+      </div>
+    </div>
+  );
+};
 
-// export default AdminLayout;
+export default AdminLayout;

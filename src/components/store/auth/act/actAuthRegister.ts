@@ -16,7 +16,7 @@ const actAuthRegister = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/${formData.role}/register`, // Use dynamic role in the endpoint
+        `http://localhost:8000/api/${formData.role}/register`, 
         formData
       );
       return response.data;

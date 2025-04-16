@@ -25,7 +25,7 @@ const actAuthLogin = createAsyncThunk(
 
     try {
       const res = await axios.post<TResponse>(
-        "http://localhost:8000/api/login", // Endpoint unique pour tous les rôles
+        "http://localhost:8000/api/login", 
         formData
       );
       return res.data;

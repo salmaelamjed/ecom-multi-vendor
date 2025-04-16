@@ -4,7 +4,7 @@ import Categories from "@/pages/commun/Categories";
 
 const DefaultLayout = () => {
   const location = useLocation();
-  const hideHeader = ["/login", "/register","/register-as-vendor"].includes(location.pathname);
+  const hideHeader = ["/login", "/register","/register-as-vendor","/reset-password/send-otp","/reset-password/verify-otp","/reset-password/reset"].includes(location.pathname);
   const showCategories = location.pathname === "/" || location.pathname.startsWith("/categories/products");
 
   return (
